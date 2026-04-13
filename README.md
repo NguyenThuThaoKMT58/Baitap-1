@@ -198,23 +198,23 @@ D. (Bonus - không bắt buộc)
      
 4.tạo file ./myapi/Dockerfile để khai báo sử dụng Python 3.9 slim
 
- # Sử dụng phiên bản Python nhẹ (alpine) để giảm dung lượng image
+  -Sử dụng phiên bản Python nhẹ (alpine) để giảm dung lượng image
  FROM python:3.9-slim
 
- # Thiết lập thư mục làm việc bên trong container
+ - Thiết lập thư mục làm việc bên trong container
  WORKDIR /app
 
- # Sao chép file requirements vào và cài đặt thư viện
+ - Sao chép file requirements vào và cài đặt thư viện
  COPY requirements.txt .
  RUN pip install --no-cache-dir -r requirements.txt
 
- # Sao chép toàn bộ mã nguồn vào container
+ - Sao chép toàn bộ mã nguồn vào container
  COPY . .
 
- # Thông báo container sẽ chạy ở cổng 9630
+ - Thông báo container sẽ chạy ở cổng 9630
  EXPOSE 9630
 
- # Lệnh khởi chạy ứng dụng
+ - Lệnh khởi chạy ứng dụng
  CMD ["python", "app.py"]
 
         cat <<EOF > ./myapi/Dockerfile
@@ -306,7 +306,11 @@ F. Gỡ lỗi:
       healthcheck:
       
           test: ["CMD", "curl", "-f", "http://localhost:9630"]
-          
+
+ . mở file bằng lệnh nano docker-compose.yml và sửa phần myapi
+
+ <img width="885" height="935" alt="image" src="https://github.com/user-attachments/assets/d5da5d5f-5d8d-4c0e-802f-efa984750a45" />
+   
 3.giới hạn resource cho một service: (tránh việc 1 service chiếm quá nhiều ram)
 
       deploy:
@@ -318,3 +322,48 @@ F. Gỡ lỗi:
             memory: 512M
             
 sử dụng lệnh: docker compose stats để quan sát lượng ram sử dụng bởi mỗi service
+
+<img width="953" height="259" alt="image" src="https://github.com/user-attachments/assets/39e501a3-6bf4-4597-9b5b-b218ff18203f" />
+
+G. Triển khai ứng dụng đến End-user
+
+1.Trong Cloudflare: Tạo tunnel (đường hầm), chọn loại triển khai cho docker
+
+2.Convert lệnh docker run ... sang dạng docker compose
+
+3.Khai báo kết quả convert vào trong file docker-compose.yml
+
+4.Chạy lại docker compose
+
+5.Public ứng dụng bằng cách thêm 1 router trỏ tới container đang chạy trong docker, dữ liệu sẽ đi qua tunnel, url dạng sub-domain
+
+6.Kiểm tra url sub-domain đã hoạt động public cho mọi end-user
+
+Cấu trúc thư mục:
+
+myapp/
+├── docker-compose.yml
+├── nginx/
+│   └── nginx.conf
+├── myweb/
+│   └── index.html
+└── nodered/ (sẽ tự sinh dữ liệu)
+│   └── (có nhiều file tự sinh)
+│   └── settings.js (file này cần edit để bắt nodered login)
+
+Sơ đồ theo góc nhìn của dev:
+
+graph LR
+A(Ubuntu) -- Command basic --> B((Docker compose))
+B -- Khai báo --> C((Nodered))
+C -- Cấu hình --> E(Yêu cầu đăng nhập) --> Z[end-user]
+B -- Khai báo --> D((nginx))
+D -- Cấu hình --> F(web+domain) --> Z
+B -- Khai báo --> G(myapi)
+D -- Cấu hình --> H((API)) --> F
+H -- proxy --> G
+
+
+Sơ đồ theo góc nhìn ngược lại:
+
+G. Câu hỏi về bài làm?
