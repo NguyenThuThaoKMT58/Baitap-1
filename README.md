@@ -50,3 +50,46 @@ ip của máy ảo ubuntu: 192.168.1.26/24
 
 <img width="1241" height="189" alt="image" src="https://github.com/user-attachments/assets/b545b3c1-48fb-4637-821c-09c2a7802f7f" />
 
+3.Cài đặt docker cho Ubuntu
+4.Kiểm tra phiên bản docker vừa cài đặt, kiểm tra phiên bản của docker compose
+
+<img width="647" height="135" alt="image" src="https://github.com/user-attachments/assets/f0868e18-6db1-4336-9a53-0bbac1447e5f" />
+
+5.Cấu hình để docker chạy mà không cần tiền tố sudo
+
+dùng câu lệnh :  sudo usermod -aG docker $USER
+
+                 newgrp docker
+                 
+6.Tìm hiểu tập lệnh của docker và docker compose
+
+   1. Nhóm lệnh Docker (Quản lý Container lẻ)
+      
+Dùng khi bạn muốn chạy nhanh một ứng dụng hoặc kiểm tra hệ thống.
+
+docker ps: Liệt kê các container đang chạy. (Thêm -a để xem cả các cái đã tắt).
+
+docker images: Xem danh sách các Image (bản thiết kế) đang có trong máy.
+
+docker run [tên_image]: Tải và chạy một container từ image.
+
+Ví dụ: docker run -d -p 80:80 nginx (Chạy web server Nginx ngầm và mở cổng 80).
+
+docker stop [ID_hoặc_tên]: Dừng một container đang chạy.
+
+docker rm [ID_hoặc_tên]: Xóa hẳn một container.
+
+docker exec -it [ID] bash: "Chui" vào bên trong container để gõ lệnh trực tiếp (rất hay dùng để debug).
+
+   2. Nhóm lệnh Docker Compose (Quản lý đa dịch vụ)
+      
+Đây là công cụ cực mạnh cho đồ án. Thay vì gõ từng lệnh docker run, bạn viết tất cả vào file docker-compose.yml rồi chỉ cần 1 lệnh để khởi động toàn bộ (ví dụ: chạy cùng lúc Node-RED, Database, và Backend).
+
+docker compose up -d: Khởi động tất cả các dịch vụ được định nghĩa trong file cấu hình (chạy ngầm).
+
+docker compose down: Dừng và xóa toàn bộ các container, mạng lưới đã tạo từ file compose (giúp máy sạch sẽ).
+
+docker compose logs -f: Xem nhật ký hoạt động của các dịch vụ (để biết tại sao code bị lỗi).
+
+docker compose restart: Khởi động lại các dịch vụ.
+7.Đảm bảo tường lửa trên Ubuntu đã cho phép các cổng 80, 1880, 9630 (Lệnh: sudo ufw allow ...)
