@@ -10,9 +10,14 @@ A. Đăng ký tên miền xịn cho cá nhân:
 
 B. Cài đặt Ubuntu + Docker
 1.Cài đặt hệ điều hành Ubuntu 24.04.4 LTS
-  Sử dụng một trong các công cụ để giả lập: HyperV (có sẵn của windows), VirutualBox (Miễn phí), VM_Ware (bản quyền)
-  Download file iso để cài đặt.
+ - Sử dụng một trong các công cụ để giả lập: HyperV (có sẵn của windows), VirutualBox (Miễn phí), VM_Ware (bản quyền)
+ - Download file iso để cài đặt.
 
   <img width="958" height="927" alt="image" src="https://github.com/user-attachments/assets/361905f1-cd38-4202-abdc-aa1cfd638f86" />
 
-  Cấu hình mạng trong Ubuntu (và công cụ giả lập) để cho phép truy cập SSH vào Ubuntu từ cmd của windows
+ - Cấu hình mạng trong Ubuntu (và công cụ giả lập) để cho phép truy cập SSH vào Ubuntu từ cmd của windows
+Thiết lập SSH trên Ubuntu
+<img width="1260" height="884" alt="image" src="https://github.com/user-attachments/assets/8a0f55ad-7bcf-4383-a62f-55983c845826" />
+
+Cấu hình để Windows "nhìn thấy" Ubuntu
+<img width="1169" height="755" alt="image" src="https://github.com/user-attachments/assets/cb13ef41-3328-4805-8bbb-7bf8e526c2c0" />
