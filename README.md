@@ -21,3 +21,16 @@ Thiết lập SSH trên Ubuntu
 
 Cấu hình để Windows "nhìn thấy" Ubuntu
 <img width="1169" height="755" alt="image" src="https://github.com/user-attachments/assets/cb13ef41-3328-4805-8bbb-7bf8e526c2c0" />
+
+2.Tìm hiểu các lệnh cơ bản của ubuntu
+Các lệnh cần tìm hiểu:
+
+-Liệt kê các file trong thư mục: ls
+-Tạo thư mục: mkdir nameFolder
+-Chuyển thư mục làm việc: cd path
+-Copy file: cp file_nguồn path/file_đích
+-Thay đổi quyền thao tác file: sudo chmod xxx filename
+-Edit file: sudo nano tenfile
+  .CTRL+o : lưu nội dung sau khi edit
+  .CTRL+x : thoát edit file
+-Xem ip của máy ubuntu: ip -4 addr
