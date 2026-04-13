@@ -351,19 +351,75 @@ myapp/
 │   └── (có nhiều file tự sinh)
 │   └── settings.js (file này cần edit để bắt nodered login)
 
-Sơ đồ theo góc nhìn của dev:
-
-graph LR
-A(Ubuntu) -- Command basic --> B((Docker compose))
-B -- Khai báo --> C((Nodered))
-C -- Cấu hình --> E(Yêu cầu đăng nhập) --> Z[end-user]
-B -- Khai báo --> D((nginx))
-D -- Cấu hình --> F(web+domain) --> Z
-B -- Khai báo --> G(myapi)
-D -- Cấu hình --> H((API)) --> F
-H -- proxy --> G
-
-
-Sơ đồ theo góc nhìn ngược lại:
-
 G. Câu hỏi về bài làm?
+
+1.Tại sao phải dùng Nginx làm Reverse Proxy mà không trỏ thẳng Tunnel vào Node-RED?
+
+Mặc dù Cloudflare Tunnel có thể trỏ thẳng vào Node-RED, nhưng dùng Nginx đem lại 3 lợi ích lớn:
+
+. Quản lý tập trung: Thảo chỉ cần 1 Tunnel trỏ vào Nginx, sau đó Nginx sẽ điều hướng (Route) đến API, Node-RED hay Website dựa trên đường dẫn (Domain/Path).
+
+. Bảo mật & Ẩn giấu: Nginx đóng vai trò là "lễ tân", nó che giấu cấu trúc mạng nội bộ. End-user không biết Node-RED đang chạy ở port nào.
+
+. Hiệu suất: Nginx xử lý các file tĩnh (HTML, CSS, Ảnh) cực nhanh, giúp giảm tải cho các ứng dụng chạy logic như Node.js hay Python.
+
+2.Sự khác biệt giữa việc Mount file và Mount thư mục trong Docker là gì?
+
+<img width="903" height="345" alt="image" src="https://github.com/user-attachments/assets/8d0debc7-acbf-49c7-bee7-44b290cd1452" />
+
+Ví dụ trong bài:
+
+. Mount file: nginx.conf (chỉ cần file cấu hình này thôi).
+
+. Mount thư mục: node_red_data (để lưu hàng chục file dữ liệu của Node-RED).
+
+3.Nếu thay đổi file index.html ở máy Ubuntu, nội dung trên web có thay đổi ngay không? Tại sao?
+
+Có. Nội dung sẽ thay đổi ngay lập tức khi F5 trình duyệt.
+
+. Tại sao: Nhờ cơ chế Volumes. Khi Thảo sửa file ở máy Ubuntu, do file đó đã được "gắn" (mount) vào bên trong container, nên Nginx bên trong sẽ đọc được dữ liệu mới nhất ngay mà không cần khởi động lại container.
+
+4.docker-compose.yml khai báo các services có phần restart: always hoặc restart: unless-stopped : chúng để làm gì?
+
+. always: Container sẽ tự khởi động lại trong mọi trường hợp (bị lỗi, máy ảo khởi động lại, hoặc Thảo chủ động tắt).
+
+. unless-stopped: Giống always, nhưng nếu Thảo chủ động dùng lệnh docker stop, nó sẽ không tự bật lại khi máy ảo khởi động lại. Điều này giúp Thảo kiểm soát tốt hơn những dịch vụ mình muốn tạm dừng lâu dài.
+
+5.Cách khai báo để tất cả các services đều dùng chung 1 network? lợi ích của việc khai báo này là gì? Sửa đổi file docker-compose để tất cả các service đều dùng chung 1 network.
+
+Cách khai báo ngắn gọn:
+
+Thêm networks: [ten_network] vào từng service và định nghĩa nó ở cuối file.
+
+YAML
+services:
+  my-nginx:
+    networks: [my_net]
+  myapi:
+    networks: [my_net]
+
+networks:
+  my_net: # Định nghĩa tên mạng dùng chung
+Lợi ích :
+
+Dùng tên thay cho IP: Thay vì dùng IP máy ảo (hay đổi), Nginx có thể gọi API bằng tên http://myapi:9630. Docker tự hiểu đó là đâu.
+
+Bảo mật: Chỉ các container trong cùng my_net mới nói chuyện được với nhau. Bên ngoài không thể lẻn vào "quấy rối" các service nội bộ.
+
+Tốc độ: Giao tiếp nội bộ giữa các container qua bridge network cực kỳ nhanh và ổn định.
+
+6.Tìm cách đưa Cloudflare Token vào trong file .env rồi sau đó thêm .env vào file .gitignore trước khi push code lên github. Tại sao nói đây là điều quan trọng về bảo mật mã nguồn?
+
+Cách làm:
+
+-Tạo file tên là .env cùng thư mục với docker-compose.yml:
+
+-Trong docker-compose.yml, sửa dòng token thành:
+
+-Tạo file .gitignore và thêm dòng:
+
+Tại sao quan trọng?
+
+.Tránh lộ lọt bí mật: Token là "chìa khóa" vào hệ thống của Thảo. Nếu Thảo push file này lên GitHub, bất kỳ ai cũng có thể chiếm quyền điều khiển đường hầm (Tunnel) của Thảo để tấn công vào mạng nội bộ.
+
+.Tính linh hoạt: Thảo có thể chia sẻ code cho bạn bè mà không sợ lộ token cá nhân, bạn của Thảo chỉ cần tạo file .env của riêng họ là chạy được.
