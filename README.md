@@ -28,9 +28,25 @@ Các lệnh cần tìm hiểu:
 -Liệt kê các file trong thư mục: ls
 -Tạo thư mục: mkdir nameFolder
 -Chuyển thư mục làm việc: cd path
+
+<img width="1111" height="182" alt="image" src="https://github.com/user-attachments/assets/1dae9501-3840-4f48-b2c2-fd1f962f508a" />
+
 -Copy file: cp file_nguồn path/file_đích
+
+<img width="805" height="128" alt="image" src="https://github.com/user-attachments/assets/69692e39-9dc9-49f8-8f1a-bc1c3f12dca8" />
+
 -Thay đổi quyền thao tác file: sudo chmod xxx filename
+
+<img width="783" height="271" alt="image" src="https://github.com/user-attachments/assets/54615de2-9c81-4816-a1cc-af4b79ffa88c" />
+
 -Edit file: sudo nano tenfile
   .CTRL+o : lưu nội dung sau khi edit
   .CTRL+x : thoát edit file
+
+  <img width="1445" height="759" alt="image" src="https://github.com/user-attachments/assets/544ad340-2beb-42d0-8535-38607fcdc4c7" />
+
 -Xem ip của máy ubuntu: ip -4 addr
+ip của máy ảo ubuntu: 192.168.1.26/24
+
+<img width="1241" height="189" alt="image" src="https://github.com/user-attachments/assets/b545b3c1-48fb-4637-821c-09c2a7802f7f" />
+
