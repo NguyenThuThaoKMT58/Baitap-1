@@ -6,4 +6,5 @@ A. Đăng ký tên miền xịn cho cá nhân:
 4.Nhập 2 dòng namespace của cloudflare vào trong trang quản lý DNS record của tên miền đăng ký (vd trên mắt bão)
 
 1. Domain : Thao04.io.vn
-2. 
+2. <img width="1290" height="892" alt="image" src="https://github.com/user-attachments/assets/b94e23cc-5a49-43cf-98da-c4043e8b504a" />
+
